@@ -22,10 +22,14 @@ run: $(EXEC)
 	echo 3 | sudo tee /proc/sys/vm/drop_caches
 	watch -d -t "./phonebook_orig && echo 3 | sudo tee /proc/sys/vm/drop_caches"
 
-cache-test: $(EXEC)
+cache-test-orig: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses:u,cache-references:u,instructions:u,cycles:u,L1-dcache-load-misses,L1-dcache-store-misses,L1-dcache-prefetch-misses,L1-icache-load-misses\
 		./phonebook_orig
+cache-test-opt: $(EXEC)
+	perf stat --repeat 100 \
+        -e cache-misses:u,cache-references:u,instructions:u,cycles:u,L1-dcache-load-misses,L1-dcache-store-misses,L1-dcache-prefetch-misses,L1-icache-load-misses\
+        ./phonebook_opt
 output.txt: cache-test calculate
 	./calculate
 
